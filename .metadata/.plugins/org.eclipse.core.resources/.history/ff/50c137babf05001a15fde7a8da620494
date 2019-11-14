@@ -1,0 +1,40 @@
+package edu.neu.csye6200.daycare;
+
+import java.util.List;
+import java.util.Scanner;
+
+public class DayCareController {
+	private static final String studentFileName = "student.csv";
+	private static final String teacherFileName = "teacher.csv";
+	
+	public static void demo() {
+		System.out.println("DayCare Demo ");
+		FileUtil fileutil = new FileUtil();
+		
+		//Store data read from file in file_data, call readTextFile using FileUtil object passing filename
+		List<String> student_data = fileutil.readTextFile(studentFileName);
+				
+		//Store data read from file in file_data, call readTextFile using FileUtil object passing filename
+		List<String> teacher_data = fileutil.readTextFile(teacherFileName);
+		
+		//Get DayCare factory obj from DayCare factory
+		DayCareFactory  factoryObj = DayCareFactory.getObj();
+		
+		public static Student parseStudentListCreateObj (String data) {
+			Scanner scanStudent = new Scanner(data);
+			scanStudent.useDelimiter(",");
+					String firstName         	=scanStudent.next();
+					String lastName          	=scanStudent.next();
+					String address          	=scanStudent.next();
+					int age            			=scanStudent.nextInt();
+					String phoneNumber          =scanStudent.next();
+					int studentID            		=scanStudent.nextInt();
+					Student studentObj = new Student(firstName, lastName, address, age, phoneNumber, null, null, null, null);
+					scanStudent.close();
+			return studentObj;
+			}
+		
+		System.out.println("DayCare Demo Done");
+	}
+
+}

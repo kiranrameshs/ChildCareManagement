@@ -1,0 +1,8 @@
+package edu.neu.csye6200.daycare;
+
+import java.util.List;
+
+public class Classroom {
+	List<Student> studentList; 
+	List<Teacher> teacherList; 
+}

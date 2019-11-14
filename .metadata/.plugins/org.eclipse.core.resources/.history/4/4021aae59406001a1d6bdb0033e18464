@@ -1,0 +1,10 @@
+package edu.neu.csye6200.daycare;
+
+public class Teacher extends Person {
+	public Teacher(String firstName, String lastName, String address, Integer age, String phoneNumber) {
+		super(firstName, lastName, address, age, phoneNumber);
+		
+	}
+	private int teacherID;
+	private double wage;
+}

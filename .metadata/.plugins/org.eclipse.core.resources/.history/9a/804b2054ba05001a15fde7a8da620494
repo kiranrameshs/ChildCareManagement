@@ -1,0 +1,23 @@
+package edu.neu.csye6200.daycare;
+
+import java.util.List;
+
+public class DayCareController {
+	
+	
+	public static void demo() {
+		System.out.println("DayCare Demo ");
+		FileUtil fileutil = new FileUtil();
+		
+		//Store data read from file in file_data, call readTextFile using FileUtil object passing filename
+		List<String> emp_data = fileutil.readTextFile(studentFileName);
+				
+		//Store data read from file in file_data, call readTextFile using FileUtil object passing filename
+		List<String> client_data = fileutil.readTextFile(teacherFileName);
+		
+		//Create a DayCare object called serviceDayCare 
+		DayCare serviceDayCare = new DayCare();
+		System.out.println("DayCare Demo Done");
+	}
+
+}
