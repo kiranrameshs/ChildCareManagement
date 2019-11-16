@@ -1,0 +1,24 @@
+package edu.neu.csye6200.daycare;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class EnrollmentRulesFactory {
+	
+	private static EnrollmentRulesFactory instance = null;
+	private EnrollmentRulesFactory() {
+	}
+	
+	public static EnrollmentRulesFactory getObj() {
+		if (instance == null) {
+			instance = new EnrollmentRulesFactory();
+		}
+		return instance;
+	}
+	
+	public  List<EnrollmentRules> getRuleObj(List<String> enrollmentRegulationList) {
+		List<EnrollmentRules> EnrollmentRulesList = new ArrayList<EnrollmentRules>();
+			 DayCareController dayCare = new DayCareController();
+			return EnrollmentRulesList;
+	} 
+}

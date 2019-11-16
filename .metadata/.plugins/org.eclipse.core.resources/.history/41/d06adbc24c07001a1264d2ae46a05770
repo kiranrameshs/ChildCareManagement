@@ -1,0 +1,29 @@
+package edu.neu.csye6200.daycare;
+
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+
+public class Student extends Person {
+	private int studentID;
+	private String fatherName;
+	private String motherName;
+	private List<Vaccine> immunizationRecord;
+	private LocalDate dateOfJoining;
+	private int groupID;
+	
+	public Student(String firstName, String lastName, int studentID, String parentName,
+			List<Vaccine> immunizationRecord, LocalDate dateOfJoining, int groupID) {
+		super(firstName, lastName);
+		this.studentID = studentID;
+		this.parentName = parentName;
+		this.immunizationRecord = immunizationRecord;
+		this.dateOfJoining = dateOfJoining;
+		this.groupID = groupID;
+	}
+	
+	
+	
+	
+
+}

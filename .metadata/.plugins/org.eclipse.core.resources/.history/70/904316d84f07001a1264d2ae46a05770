@@ -1,0 +1,78 @@
+package edu.neu.csye6200.daycare;
+
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+
+public class Student extends Person {
+	private int studentID;
+	private String fatherName;
+	private String motherName;
+	private List<Vaccine> immunizationRecord;
+	private LocalDate dateOfJoining;
+	private int groupID;
+	private int classID;
+	private int age;
+	private String address;
+
+	public Student(String firstName, String lastName, String fatherName, String motherName, LocalDate dateOfJoining,
+			int age, String address) {
+		super(firstName, lastName);
+		this.fatherName = fatherName;
+		this.motherName = motherName;
+		this.dateOfJoining = dateOfJoining;
+		this.age = age;
+		this.address = address;
+	}
+	public int getStudentID() {
+		return studentID;
+	}
+	public void setStudentID(int studentID) {
+		this.studentID = studentID;
+	}
+	public String getFatherName() {
+		return fatherName;
+	}
+	public void setFatherName(String fatherName) {
+		this.fatherName = fatherName;
+	}
+	public String getMotherName() {
+		return motherName;
+	}
+	public void setMotherName(String motherName) {
+		this.motherName = motherName;
+	}
+	public List<Vaccine> getImmunizationRecord() {
+		return immunizationRecord;
+	}
+	public void setImmunizationRecord(List<Vaccine> immunizationRecord) {
+		this.immunizationRecord = immunizationRecord;
+	}
+	public LocalDate getDateOfJoining() {
+		return dateOfJoining;
+	}
+	public void setDateOfJoining(LocalDate dateOfJoining) {
+		this.dateOfJoining = dateOfJoining;
+	}
+	public int getGroupID() {
+		return groupID;
+	}
+	public void setGroupID(int groupID) {
+		this.groupID = groupID;
+	}
+	public int getClassID() {
+		return classID;
+	}
+	public void setClassID(int classID) {
+		this.classID = classID;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	
+
+
+}

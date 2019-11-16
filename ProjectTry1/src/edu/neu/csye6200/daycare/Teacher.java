@@ -1,13 +1,17 @@
 package edu.neu.csye6200.daycare;
 
+import java.util.List;
+
 public class Teacher extends Person {
-	
-	public Teacher(String firstName, String lastName, String address, Integer age, String phoneNumber, int teacherID,
-			double wage) {
-		super(firstName, lastName, address, age, phoneNumber);
-		this.teacherID = teacherID;
-		this.wage = wage;
-	}
 	private int teacherID;
-	private double wage;
+	private List<Student> student;
+	private int groupID;
+	private int classID;
+
+	public Teacher(String firstName, String lastName, int teacherID, List<Student> student, int groupID) {
+		super(firstName, lastName);
+		this.teacherID = teacherID;
+		this.student = student;
+		this.groupID = groupID;
+	}
 }

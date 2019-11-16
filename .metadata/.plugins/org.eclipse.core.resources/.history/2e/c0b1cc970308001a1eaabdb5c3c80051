@@ -1,0 +1,66 @@
+package edu.neu.csye6200.daycare;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Vector;
+
+public class StudentFactory {
+	private static StudentFactory instance = null;
+	private static int studentCount = 0;
+	private StudentFactory() {
+	}
+	
+	public static StudentFactory getObj() {
+		if (instance == null) {
+			instance = new StudentFactory();
+		}
+		return instance;
+	}
+	
+	
+	//initialising at startup
+	public  List<Student> initStudentObj (List<String> data) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+		String[] eachLine = null;
+		List<Student> studentList =  new Vector<Student>();
+		Iterator<String> it = data.iterator();
+			while(it.hasNext()) {
+				eachLine = it.next().split(",");
+				int studentID            			=new Integer(eachLine[0]);
+				String firstName         	=eachLine[1];
+				String lastName          	=eachLine[2];
+				int age            			=new Integer(eachLine[3]);
+				String address          	=eachLine[4];
+				String fatherName          	=eachLine[5];
+				String motherName          	=eachLine[6];
+				String phoneNumber          =eachLine[7];
+				String dateOfJoining          =eachLine[8];
+				int groupID            			=new Integer(eachLine[9]);
+				int classID            			=new Integer(eachLine[10]);
+				studentList.add(new Student( studentID, firstName,  lastName,  age,  address,  fatherName,  motherName, phoneNumber, LocalDate.parse(dateOfJoining, formatter), groupID, classID));
+					} 
+			return studentList;
+	}
+	
+	public static Student getStudentObj (String data) {
+		studentCount +=1;
+		Scanner scanStudent = new Scanner(data);
+		scanStudent.useDelimiter(",");
+				String firstName         	=scanStudent.next();
+				String lastName          	=scanStudent.next();
+				int age            			=scanStudent.nextInt();
+				String address          	=scanStudent.next();
+				String fatherName         	=scanStudent.next();
+				String motherName         	=scanStudent.next();
+				String phoneNumber          =scanStudent.next();
+				String dateOfJoining          =scanStudent.next();
+				Student studentObj = new Student( firstName,  lastName,  age,  address,  fatherName,  motherName, phoneNumber, LocalDate.parse(dateOfJoining, formatter));
+				scanStudent.close();
+		return studentObj;
+		}
+}
+
+	

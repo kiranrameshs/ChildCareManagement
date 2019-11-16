@@ -1,0 +1,22 @@
+package edu.neu.csye6200.daycare;
+
+public class EnrollmentRules {
+	private int minAge;
+	private int  maxAge;
+	private int  ageRange;
+	private int  groupSize;
+	private int  ratio;
+	private int  maxGroup;
+	
+	public EnrollmentRules(int minAge, int maxAge, int ageRange, int groupSize, int ratio, int maxGroup) {
+		super();
+		this.minAge = minAge;
+		this.maxAge = maxAge;
+		this.ageRange = ageRange;
+		this.groupSize = groupSize;
+		this.ratio = ratio;
+		this.maxGroup = maxGroup;
+	}
+	
+	
+}

@@ -1,0 +1,38 @@
+package edu.neu.csye6200.daycare;
+
+import java.util.List;
+
+public class Classroom {
+	private List<Group> groupList;
+	private int classroomID;
+	
+public Classroom(int classroomID) {
+		super();
+		this.classroomID = classroomID;
+	}
+
+public void addGroupObj(Group group) {
+	groupList.add(group);
+	}
+	
+	public void addGroupID(int groupID) {
+		
+	}
+	
+	public void removeGroup(Group group) {
+		
+	}
+	
+	public void removeGroupID(int groupID) {
+			
+	}
+	
+	public int getGroupStats() {
+		return groupList.size();
+	}
+
+	public int getGroupSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+}

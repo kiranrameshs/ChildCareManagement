@@ -1,0 +1,10 @@
+package edu.neu.csye6200.daycare;
+
+import java.util.List;
+
+public class Teacher extends Person {
+	private int teacherID;
+	private List<Student> student;
+	private int groupID;
+
+}
