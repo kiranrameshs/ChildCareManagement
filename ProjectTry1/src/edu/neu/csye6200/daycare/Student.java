@@ -43,7 +43,7 @@ public class Student extends Person {
 	}
 	
 	//reading from csv to init
-	public Student(int studentID, String firstName, String lastName, int age, String address, String fatherName, String motherName,String phoneNumber, Date dateOfJoining, int groupID, int classID) {
+	public Student(int studentID, String firstName, String lastName, int age, String address, String fatherName, String motherName,String phoneNumber, Date dateOfJoining) {
 		super(firstName, lastName);
 		this.fatherName = fatherName;
 		this.motherName = motherName;
@@ -52,9 +52,21 @@ public class Student extends Person {
 		this.address = address;
 		this.phoneNumber = phoneNumber;
 		this.studentID = studentID;
-		this.groupID = groupID;
-		this.classID = classID;
 	}
+	
+	//reading from csv to init
+		public Student(int studentID, String firstName, String lastName, int age, String address, String fatherName, String motherName,String phoneNumber, Date dateOfJoining, int groupID, int classID) {
+			super(firstName, lastName);
+			this.fatherName = fatherName;
+			this.motherName = motherName;
+			this.dateOfJoining = dateOfJoining;
+			this.age = age;
+			this.address = address;
+			this.phoneNumber = phoneNumber;
+			this.studentID = studentID;
+			this.groupID = groupID;
+			this.classID = classID;
+		}
 	public int getStudentID() {
 		return studentID;
 	}
