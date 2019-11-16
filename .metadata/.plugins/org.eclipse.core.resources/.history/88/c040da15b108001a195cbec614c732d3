@@ -65,7 +65,7 @@ public void setClassroomID(int classroomID) {
 	}
 
 	public int getNumOfGroups() {
-		return this.groupList.size();
+		return groupList.size();
 	}
 	
 	public void showClassDetails() {
