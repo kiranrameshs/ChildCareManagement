@@ -9,7 +9,7 @@ public class Classroom {
 	private EnrollmentRules enrollmentRule;
 	
 public EnrollmentRules getEnrollmentRule() {
-		return enrollmentRule;
+		return this.enrollmentRule;
 	}
 
 	public void setEnrollmentRule(EnrollmentRules enrollmentRule) {
@@ -25,11 +25,11 @@ public EnrollmentRules getEnrollmentRule() {
 	}
 
 	public void addGroupObj(Group group) {
-	groupList.add(group);
+	this.groupList.add(group);
 	}
 	
 	public List<Group> getGroupList() {
-	return groupList;
+	return this.groupList;
 }
 
 public void setGroupList(List<Group> groupList) {
@@ -60,8 +60,7 @@ public void setClassroomID(int classroomID) {
 
 	@Override
 	public String toString() {
-		return "Classroom [groupList=" + groupList + ", classroomID=" + classroomID + ", enrollmentRule="
-				+ enrollmentRule + "]";
+		return "Classroom has following groups\n" + getNumOfGroups() +"  and groups are "+ this.groupList + ", classroomID=" + this.classroomID;
 	}
 
 	public int getNumOfGroups() {

@@ -1,6 +1,0 @@
-package edu.neu.csye6200.daycare;
-
-public class Classroom {
-	List<Student> studentList; 
-	List<Teacher> teacherList; 
-}

@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Stack;
 import java.util.Vector;
 
 import org.omg.CORBA.DynAnyPackage.InvalidValue;
@@ -17,9 +18,10 @@ import org.omg.CORBA.DynAnyPackage.InvalidValue;
 public class DayCareController {
 	private static final String studentFileName = "student.csv";
 	private static final String teacherFileName = "teacher.csv";
-	private static List<Classroom> classroomList = new ArrayList<Classroom>();
-	private static List<EnrollmentRules> enrollmentruleList = null;
+	private List<Classroom> classroomList = new ArrayList<Classroom>();
+	private List<EnrollmentRules> enrollmentruleList = null;
 	private static SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+	private List<Teacher> teacherList = new ArrayList<Teacher>();
 	
 	
 	public static String getDateformat() {
@@ -37,6 +39,14 @@ public class DayCareController {
 		
 	}
 	
+	public List<Teacher> getTeacherList() {
+		return this.teacherList;
+	}
+
+	public void setTeacherList(List<Teacher> teacherList) {
+		this.teacherList = teacherList;
+	}
+
 	public void addClassroomID(int classroomID) {
 		
 	}
@@ -44,94 +54,159 @@ public class DayCareController {
 	public void removeClassroomID(Classroom classroomID) {
 		
 	}
+
+	public void showDayCareDetails() {
+		this.toString();
+	}
 	
-//	public Classroom getClassroomObj(int classroomID) {
-//		
-//	}
+	public void showTeacherListDetails() {
+		for (Teacher teacher : this.teacherList) {
+			System.out.println("teacher ID "+teacher.getTeacherID()+" teacher availability "+teacher.getisAvailable());
+			if (teacher.getisAvailable()) {
+				System.out.println("teacher is available to be assigned to a group");
+			}
+		}
+	}
 	
-	public Classroom getClassDetails(Student student, EnrollmentRules rule) throws Exception {
+	public Classroom setClassIDGroupID(Student student, EnrollmentRules rule) throws Exception {
 		boolean classroomFound = false;
-		if (classroomList.isEmpty()) {
-			Classroom classObj = new Classroom(classroomList.size(), rule);
+		boolean groupFound = false;
+		Classroom vacantClassroom = null;
+		if (this.classroomList.isEmpty()) {
+			Classroom classObj = new Classroom(this.classroomList.size(), rule);
 			classroomFound = true;
-			return classObj;
+			this.addClassroom(classObj);
+			System.out.println("No classrooms available, new class created");
+			Group groupObj = new Group(classObj.getNumOfGroups(), classObj.getEnrollmentRule());
+			System.out.println("No groups available, new group created");
+			classObj.addGroupObj(groupObj);
+			//add teacher
+			if (groupObj.getGroupSize()+1 <= groupObj.getEnrollmentRule().getGroupSize()) {
+				groupFound = true;
+				groupObj.addStudent(student);
+				student.setGroupID(groupObj.getGroupID());
+				System.out.println("groupID set");
+				student.setClassID(classObj.getClassroomID());
+				System.out.println("classID set");
+				return classObj;
+			}
 		}
 		else {
-			for (Classroom classroom : classroomList) {
+			for (Classroom classroom : this.classroomList) {
 				if (classroom.getEnrollmentRule().equals(rule)) {
-					System.out.println(classroom.getNumOfGroups() +" < "+rule.getGroupSize());
-					if (classroom.getNumOfGroups()<= rule.getGroupSize()) {
-						classroomFound = true;
-						return classroom;
-					}
-					else {
-						System.out.println("Classroom matching age group found but room is full");
-					}
+					if(classroom.getNumOfGroups()<=classroom.getEnrollmentRule().getMaxGroup()) {
+						if(classroom.getNumOfGroups()==classroom.getEnrollmentRule().getMaxGroup()) {
+							System.out.println("Classroom is full");
+						}
+						else {
+							classroomFound = true;
+							vacantClassroom = classroom;
+							for (Group group : classroom.getGroupList()) {
+								if (group.getGroupSize()+1 <= group.getEnrollmentRule().getGroupSize()) {
+									System.out.println("Group with vacancy found");
+									groupFound = true;
+									group.addStudent(student);
+									student.setGroupID(group.getGroupID());
+									System.out.println("groupID set");
+									student.setClassID(classroom.getClassroomID());
+									System.out.println("classID set");
+									return classroom;
+								}
+								else{
+										System.out.println("Group is full");
+									}
+							}
+						}	
+						}
+					else{
+						System.out.println("Classroom is full");
+						}
 				}
 				else {
-					System.out.println("Classroom not for this age group");
+					System.out.println("Class rule mismatch");
+				}
+				if (classroomFound == true && vacantClassroom != null) {
+					System.out.println("Vacant classroom available, group is full, creating new group");
+					System.out.println("inputs for creating new group are "+vacantClassroom.getNumOfGroups()+"  "+ vacantClassroom.getEnrollmentRule());
+					Group newGroup = new Group(vacantClassroom.getNumOfGroups(), vacantClassroom.getEnrollmentRule());
+					vacantClassroom.addGroupObj(newGroup);
+					//add teacher
+					System.out.println("check ***  "+newGroup.getGroupID()+"  "+(newGroup.getGroupSize()+1)+"   "+newGroup.getEnrollmentRule().getGroupSize());
+					if (newGroup.getGroupSize()+1 <= newGroup.getEnrollmentRule().getGroupSize()) {
+						groupFound = true;
+						newGroup.addStudent(student);
+						student.setGroupID(newGroup.getGroupID());
+						System.out.println("groupID set");
+						student.setClassID(vacantClassroom.getClassroomID());
+						System.out.println("classID set");
+						return vacantClassroom;
 				}
 			}
-			if (classroomFound == false) {
-				System.out.println("Check Classroom objs");
-				for (Classroom classroom : classroomList) {
-					classroom.showClassDetails();
-				}
-				Classroom classObj = new Classroom(this.classroomList.size(), rule);
-				classroomFound = true;
+		}
+		}
+		System.out.println("classroomFound is "+classroomFound +"  groupFound  "+groupFound);
+		if (classroomFound == false && groupFound == false) {
+			System.out.println("Class and group not found");
+			System.out.println("Creating new class and group");
+			Classroom classObj = new Classroom(this.classroomList.size(), rule);
+			classroomFound = true;
+			Group groupObj = new Group(classObj.getNumOfGroups(), classObj.getEnrollmentRule());
+			classObj.addGroupObj(groupObj);
+			//add teacher
+			if (groupObj.getGroupSize()+1 <= groupObj.getEnrollmentRule().getGroupSize()) {
+				groupFound = true;
+				groupObj.addStudent(student);
+				student.setGroupID(groupObj.getGroupID());
+				System.out.println("groupID set");
+				student.setClassID(classObj.getClassroomID());
+				System.out.println("classID set");
 				return classObj;
-			}	
+			}
+			
 		}
 		throw new Exception("Invalid input while assigning Class ID");
 		}
-
-	public Group getGroupDetails(Classroom classroom) throws Exception {
-		boolean groupFound = false;
-		if ((classroom.getNumOfGroups())==0) {
-			Group groupObj = new Group(classroom.getNumOfGroups(), classroom.getEnrollmentRule());
-			groupFound = true;
-			return groupObj;
-		}
-		else {
-			for (Group group : classroom.getGroupList()) {
-				if (group.getGroupSize() < group.getEnrollmentRule().getGroupSize()) {
-					groupFound = true;
-					return group;
-				}
-				else {
-					System.out.println("Group found but currently full");
-				}
-			}
-			if(groupFound == false) {
-				Group groupObj = new Group(classroom.getNumOfGroups(), classroom.getEnrollmentRule());
-				return groupObj;
-			}
-		}
-		throw new Exception("Invalid input while assigning group ID");	
-			
-	}
 	
-	public EnrollmentRules getEnrollmentRulesObj(int age) throws InvalidValue {
-		for (EnrollmentRules enrollmentRules : enrollmentruleList) {
-			System.out.println(enrollmentRules.getMinAge());
-			System.out.println(enrollmentRules.getMaxAge());
+	public EnrollmentRules getApplicableEnrollmentRule(int age) throws InvalidValue {
+		for (EnrollmentRules enrollmentRules : this.enrollmentruleList) {
 			if((enrollmentRules.getMinAge()<= age && age <= enrollmentRules.getMaxAge())) {
 				System.out.println("Rule found");
 				return enrollmentRules;
 			}
 			else {
-				System.out.println("Invalid Age Input");
-				
+				System.out.println("Age group mismatch");	
 			}
 		}
-		throw new InvalidValue("Age not in range"); 
+		throw new InvalidValue("Invalid Age input for Student"); 
 	}
+	
+	public void enrollStudent(Student student) throws Exception {
+			int studentAge = student.getAge();
+			EnrollmentRules rule = this.getApplicableEnrollmentRule(studentAge);
+			System.out.println("Applicable rule is "+rule.getAgeRange());
+			this.setClassIDGroupID(student, rule);
+			System.out.println("Student Enrollemnt Complete");
+			student.showStudentDetails();
+			System.out.println("Student Enrollemnt Complete\n");
+		}
+
 	
 	public static void demo() throws Exception {
 		System.out.println("DayCare Demo ");
+		
+		
+		//Get DayCare factory obj from DayCare factory
+		DayCareFactory  factoryObj = DayCareFactory.getObj();
+		System.out.println("DayCare Factory obj created");
+
+		DayCareController DayCare = factoryObj.getDayCareObj();
+		System.out.println("DayCare obj  created");
+		
 		//Creating Rules
 		EnrollmentRulesFactory enrollFactoryObj = EnrollmentRulesFactory.getObj();
-		System.out.println("Get Rules factory obj ");
+		System.out.println("Rules factory obj  created");
+		
+		
 		List<String> enrollmentRegulationList = new ArrayList<String>();
 		//minAge, maxAge, num of Students, num of Teachers, groupSize 
 		enrollmentRegulationList.add("6,12,4,1,3");
@@ -140,101 +215,46 @@ public class DayCareController {
 		enrollmentRegulationList.add("36,47,8,1,3");
 		enrollmentRegulationList.add("48,59,12,1,2");
 		enrollmentRegulationList.add("60,100,15,1,2");
-		enrollmentruleList = enrollFactoryObj.getRuleObj(enrollmentRegulationList);
-		for (EnrollmentRules EnrollmentRules : enrollmentruleList) {
+		DayCare.enrollmentruleList = enrollFactoryObj.getRuleObj(enrollmentRegulationList);
+		for (EnrollmentRules EnrollmentRules : DayCare.enrollmentruleList) {
 			EnrollmentRules.showRuleDetails();
 		}
 		System.out.println("Rule objs created");
 
-		//Get DayCare factory obj from DayCare factory
-		DayCareFactory  factoryObj = DayCareFactory.getObj();
-		System.out.println("DayCare Factory obj");
-
-		DayCareController DayCare = factoryObj.getDayCareObj();
-		System.out.println("DayCare obj");
+		//*****INITIALIZATION START*****
 		//Get Student factory obj from Student factory
 		StudentFactory  studentFactoryObj = StudentFactory.getObj();
 		System.out.println("Student Factory obj");
-		 
-		//enrollment begins here for single entry
-//		String sampleStudentData = "Bilz, Tompson,20, #60 St Germain, Aron Tompson, Emma Tompson,8888888888,"+formatter.format(new Date());
-//		Student student  = studentFactoryObj.getStudentObj(sampleStudentData);
-//		System.out.println("Student obj created");
-//		student.showStudentDetails();
-//		
-//		
-//		int studentAge = student.getAge();
-//		EnrollmentRules rule = DayCare.getEnrollmentRulesObj(studentAge);
-//		System.out.println("Applicable rule is "+rule.getAgeRange());
-//		rule.showRuleDetails();
-//		Classroom classroomObj = DayCare.getClassDetails(student, rule);
-//		classroomObj.showClassDetails();
-//		DayCare.addClassroom(classroomObj);
-//		System.out.println("Classroom added to classroom list");
-//		for (Classroom classroom : classroomList) {
-//			classroomObj.showClassDetails();
-//		}
-//		Group groupObj = DayCare.getGroupDetails(classroomObj);
-//		groupObj.showGroupDetails();
-//		System.out.println(" Applicable group selected");
-//		student.setGroupID(groupObj.getGroupID());
-//		System.out.println("groupID set");
-//		student.setClassID(classroomObj.getClassroomID());
-//		System.out.println("classID set");
-//		groupObj.addStudent(student);
-//		System.out.println("Added student to list under group");
-//		classroomObj.addGroupObj(groupObj);
-//		System.out.println("Added group to list under class");
-//		student.showStudentDetails();
 		
-		
+		//Get Teacher factory obj from Student factory
+		TeacherFactory  teacherFactoryObj = TeacherFactory.getTeacherFactoryObj();
+		System.out.println("Teacher Factory obj");
 		
 		//enrollment begins here for multiple entries (initialization -> push to static)
 		FileUtil fileutil = new FileUtil();
 		
 		//Store data read from file in file_data, call readTextFile using FileUtil object passing filename
-		List<String> student_data = fileutil.readTextFile(studentFileName);
-		System.out.println("Student File read successfully");
+		List<String> teacher_data = fileutil.readTextFile(teacherFileName);
+		System.out.println("Teacher File read successfully");
+		DayCare.setTeacherList(teacherFactoryObj.getTeacherObj(teacher_data));
 		
 		//Store data read from file in file_data, call readTextFile using FileUtil object passing filename
-//		List<String> teacher_data = fileutil.readTextFile(teacherFileName);
-//		System.out.println("Teacher File read successfully");
-		
+		List<String> student_data = fileutil.readTextFile(studentFileName);
+		System.out.println("Student File read successfully");
 		List<Student> studentList = studentFactoryObj.initStudentObj(student_data);
-		for (Student student : studentList) {
-			student.showStudentDetails();
-			int studentAge = student.getAge();
-			EnrollmentRules rule = DayCare.getEnrollmentRulesObj(studentAge);
-			System.out.println("Applicable rule is "+rule.getAgeRange());
-			rule.showRuleDetails();
-			Classroom classroomObj = DayCare.getClassDetails(student, rule);
-			classroomObj.showClassDetails();
-			DayCare.addClassroom(classroomObj);
-			System.out.println("Classroom added to classroom list");
-			for (Classroom classroom : classroomList) {
-				classroomObj.showClassDetails();
+			for (Student student : studentList) {
+					DayCare.enrollStudent(student);
 			}
-			Group groupObj = DayCare.getGroupDetails(classroomObj);
-			groupObj.showGroupDetails();
-			System.out.println(" Applicable group selected");
-			student.setGroupID(groupObj.getGroupID());
-			System.out.println("groupID set");
-			student.setClassID(classroomObj.getClassroomID());
-			System.out.println("classID set");
-			groupObj.addStudent(student);
-			System.out.println("Added student to list under group");
-			classroomObj.addGroupObj(groupObj);
-			System.out.println("Added group to list under class");
-			student.showStudentDetails();
-		}
+		//*****INITIALIZATION COMPLETE*****
+		System.out.println("INITIALIZATION COMPLETE");
 		
 		
+		//enrollment begins here for single entry for inputs from UI
+//		String sampleStudentData = "Bilz, Tompson,20, #60 St Germain, Aron Tompson, Emma Tompson,8888888888,"+formatter.format(new Date());
+//		Student student  = studentFactoryObj.getStudentObj(sampleStudentData);
+//		System.out.println("Student obj created");
+//		DayCare.enrollStudent(student);
 		
-		
-		
-		
-		
-
 		
 		System.out.println("DayCare Demo Done");
 	}

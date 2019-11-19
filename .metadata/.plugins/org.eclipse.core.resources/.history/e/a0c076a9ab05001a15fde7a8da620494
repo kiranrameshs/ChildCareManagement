@@ -1,9 +1,0 @@
-package edu.neu.csye6200.daycare;
-
-import java.util.List;
-
-public class Group {
-	private int groupID;
-	List<Student> studentList; 
-	List<Teacher> teacherList; 
-}

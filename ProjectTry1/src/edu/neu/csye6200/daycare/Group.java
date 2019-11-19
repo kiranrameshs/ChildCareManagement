@@ -5,17 +5,24 @@ import java.util.List;
 
 public class Group {
 	private int groupID;
-	private static List<Student> studentList = new ArrayList<Student>(); 
-	private static List<Teacher> teacherList = new ArrayList<Teacher>();
+	private List<Student> studentList = new ArrayList<Student>(); 
+	private Teacher teacher = null;
 	private EnrollmentRules enrollmentRule = null;
 	
 	public void addStudent(Student student) {
 		this.studentList.add(student);
 	}
 	
-	public void addTeacher(Teacher teacher) {
-		this.teacherList.add(teacher);
+
+	public Teacher getTeacher() {
+		return teacher;
 	}
+
+
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
+	}
+
 
 	public int getGroupID() {
 		return groupID;
@@ -25,21 +32,14 @@ public class Group {
 		this.groupID = groupID;
 	}
 
-	public static List<Student> getStudentList() {
-		return studentList;
+	public List<Student> getStudentList() {
+		return this.studentList;
 	}
 
-	public static void setStudentList(List<Student> studentList) {
-		Group.studentList = studentList;
+	public void setStudentList(List<Student> studentList) {
+		this.studentList = studentList;
 	}
 
-	public static List<Teacher> getTeacherList() {
-		return teacherList;
-	}
-
-	public static void setTeacherList(List<Teacher> teacherList) {
-		Group.teacherList = teacherList;
-	}
 
 	public EnrollmentRules getEnrollmentRule() {
 		return enrollmentRule;

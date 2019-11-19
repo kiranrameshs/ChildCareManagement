@@ -51,7 +51,7 @@ public class StudentFactory {
 			return studentList;
 	}
 	
-	//initialising at startup
+	//Create objs with List of string data 
 		public  List<Student> initStudentObj (List<String> data) throws ParseException {
 			String[] eachLine = null;
 			List<Student> studentList =  new Vector<Student>();
@@ -73,6 +73,7 @@ public class StudentFactory {
 				return studentList;
 		}
 	
+		//Create objs with single string data 
 	public static Student getStudentObj (String data) throws ParseException {
 		studentCount +=1;
 		

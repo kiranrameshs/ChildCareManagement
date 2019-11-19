@@ -1,3 +1,6 @@
-String firstName, String lastName, String address, Integer age, String phoneNumber, int teacherID,
-			double wage
-TeaFirstName, TeasecondName, #1 Hunt, 100, 8888888888, 1, 1000
+1,TeaOneName, TeasecondName,true, #1 Hunt, 100, 8888888888
+2,TeaTwoName, TeasecondName,true, #1 Hunt, 100, 8888888888
+3,TeathreeName, TeasecondName,true, #1 Hunt, 100, 8888888888
+4,TeafourName, TeasecondName,true, #1 Hunt, 100, 8888888888
+5,TeafiveName, TeasecondName,true, #1 Hunt, 100, 8888888888
+6,TeasixName, TeasecondName,true, #1 Hunt, 100, 8888888888

@@ -1,7 +1,0 @@
-package edu.neu.csye6200.daycare;
-
-public class Student extends Person {
-	private int studentID;
-	private String parentName;
-	private List<Immunization> immunizationRecord;
-}
