@@ -8,7 +8,18 @@ public class Group {
 	private List<Student> studentList = new ArrayList<Student>(); 
 	private Teacher teacher = null;
 	private EnrollmentRules enrollmentRule = null;
+	private int classID;
 	
+	public int getClassID() {
+		return classID;
+	}
+
+
+	public void setClassID(int classID) {
+		this.classID = classID;
+	}
+
+
 	public void addStudent(Student student) {
 		this.studentList.add(student);
 	}

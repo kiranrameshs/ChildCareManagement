@@ -71,6 +71,7 @@ public class DayCareController {
 	public Classroom setClassIDGroupID(Student student, EnrollmentRules rule) throws Exception {
 		boolean classroomFound = false;
 		boolean groupFound = false;
+		boolean teacherFound = false;
 		Classroom vacantClassroom = null;
 		if (this.classroomList.isEmpty()) {
 			Classroom classObj = new Classroom(this.classroomList.size(), rule);
@@ -78,9 +79,21 @@ public class DayCareController {
 			this.addClassroom(classObj);
 			System.out.println("No classrooms available, new class created");
 			Group groupObj = new Group(classObj.getNumOfGroups(), classObj.getEnrollmentRule());
+			groupObj.setClassID(classObj.getClassroomID());
 			System.out.println("No groups available, new group created");
 			classObj.addGroupObj(groupObj);
 			//add teacher
+			for (Teacher teacher : teacherList) {
+				if (teacher.getisAvailable()) {
+					teacher.setAvailable(false);
+					teacher.setClassID(classObj.getClassroomID());
+					teacher.setGroupID(groupObj.getGroupID());
+					groupObj.setTeacher(teacher);
+					teacherFound = true;
+					break;
+				}
+			}
+			
 			if (groupObj.getGroupSize()+1 <= groupObj.getEnrollmentRule().getGroupSize()) {
 				groupFound = true;
 				groupObj.addStudent(student);
@@ -129,8 +142,19 @@ public class DayCareController {
 					System.out.println("Vacant classroom available, group is full, creating new group");
 					System.out.println("inputs for creating new group are "+vacantClassroom.getNumOfGroups()+"  "+ vacantClassroom.getEnrollmentRule());
 					Group newGroup = new Group(vacantClassroom.getNumOfGroups(), vacantClassroom.getEnrollmentRule());
+					newGroup.setClassID(vacantClassroom.getClassroomID());
 					vacantClassroom.addGroupObj(newGroup);
 					//add teacher
+					for (Teacher teacher : teacherList) {
+						if (teacher.getisAvailable()) {
+							teacher.setAvailable(false);
+							teacher.setClassID(newGroup.getClassID());
+							teacher.setGroupID(newGroup.getGroupID());
+							newGroup.setTeacher(teacher);
+							teacherFound = true;
+							break;
+						}
+					}
 					System.out.println("check ***  "+newGroup.getGroupID()+"  "+(newGroup.getGroupSize()+1)+"   "+newGroup.getEnrollmentRule().getGroupSize());
 					if (newGroup.getGroupSize()+1 <= newGroup.getEnrollmentRule().getGroupSize()) {
 						groupFound = true;
@@ -151,8 +175,19 @@ public class DayCareController {
 			Classroom classObj = new Classroom(this.classroomList.size(), rule);
 			classroomFound = true;
 			Group groupObj = new Group(classObj.getNumOfGroups(), classObj.getEnrollmentRule());
+			groupObj.setClassID(classObj.getClassroomID());
 			classObj.addGroupObj(groupObj);
 			//add teacher
+			for (Teacher teacher : teacherList) {
+				if (teacher.getisAvailable()) {
+					teacher.setAvailable(false);
+					teacher.setClassID(groupObj.getClassID());
+					teacher.setGroupID(groupObj.getGroupID());
+					groupObj.setTeacher(teacher);
+					teacherFound = true;
+					break;
+				}
+			}
 			if (groupObj.getGroupSize()+1 <= groupObj.getEnrollmentRule().getGroupSize()) {
 				groupFound = true;
 				groupObj.addStudent(student);
@@ -255,7 +290,15 @@ public class DayCareController {
 //		System.out.println("Student obj created");
 //		DayCare.enrollStudent(student);
 		
-		
+		for (Classroom classroom : DayCare.classroomList) {
+			System.out.print("\nClassID:"+classroom.getClassroomID()+"\tAge group:"+classroom.getEnrollmentRule().getMinAge()+"-"+classroom.getEnrollmentRule().getMaxAge()+"months");
+			for (Group group : classroom.getGroupList()) {
+				System.out.print("\n\tGroupID:"+group.getGroupID()+"   Teacher Assigned:"+group.getTeacher().getFirstName()+"\n");
+				for (Student student : group.getStudentList()) {
+					System.out.println("StudentID:"+student.getStudentID()+"\t Age:"+student.getAge()+"months");
+				}
+			}
+		}
 		System.out.println("DayCare Demo Done");
 	}
 	
