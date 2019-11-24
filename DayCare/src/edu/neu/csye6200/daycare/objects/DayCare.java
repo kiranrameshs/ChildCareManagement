@@ -121,7 +121,7 @@ public class DayCare {
 		
 	}
 	
-	public static int getStuAge(String studentData) {
+	public static int getStuAge(String studentData, LocalDate currentTime) {
 		int ageInMonths =0;
 		Calendar c = Calendar.getInstance();
 		c.setTime(getStuDOB(studentData));
@@ -130,9 +130,9 @@ public class DayCare {
 		int date = c.get(Calendar.DATE);
 		LocalDate l1 = LocalDate.of(year, month, date);
 		System.out.println("l1 is "+l1);
-		LocalDate now1 = LocalDate.now();
-		System.out.println("now1 is "+now1);
-		Period age = Period.between(l1, now1);
+		//LocalDate currentTime = LocalDate.now();
+		System.out.println("now1 is "+currentTime);
+		Period age = Period.between(l1, currentTime);
 		if(age.getYears()!=0) {
 			ageInMonths = ageInMonths+ (age.getYears()*12);
 		}
@@ -146,7 +146,8 @@ public class DayCare {
 	public void enrollStudent(StudentFactory stuFactObj, String studentData) throws Exception {
 		System.out.println("Received student data for processing");
 		System.out.println("studentData "+studentData);
-		int age = getStuAge(studentData);
+		LocalDate currentDate = LocalDate.now();
+		int age = getStuAge(studentData, currentDate);
 		System.out.println("age:"+age+" months");
 		studentData = studentData+","+dateFormat.format(new Date())+","+age;
 		System.out.println("final studentData before parsing   "+studentData);

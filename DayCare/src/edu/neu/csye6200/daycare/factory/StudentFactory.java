@@ -4,7 +4,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -12,11 +16,26 @@ import java.util.Locale;
 import java.util.Scanner;
 import java.util.Vector;
 
+import edu.neu.csye6200.daycare.objects.DayCare;
 import edu.neu.csye6200.daycare.objects.Student;
+import edu.neu.csye6200.daycare.util.FileUtil;
 
 public class StudentFactory {
 	private static StudentFactory instance = null;
 	private static int studentCount = 0;
+	public static int getStudentCount() {
+		return studentCount;
+	}
+
+
+	public static void setStudentCount(int studentCount) {
+		StudentFactory.studentCount = studentCount;
+	}
+
+
+
+
+
 	private static DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy"); 
 	static SimpleDateFormat sdf = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy",
             Locale.ENGLISH);
@@ -25,7 +44,7 @@ public class StudentFactory {
 	
 	
 	//INIT
-	public  List<Student> initStudentObj (List<String> data) throws ParseException {
+	public  List<Student> initStudentObj (List<String> data, boolean updateAge) throws ParseException {
 		String[] eachLine = null;
 		List<Student> studentList =  new Vector<Student>();
 		Iterator<String> it = data.iterator();
@@ -33,7 +52,7 @@ public class StudentFactory {
 				studentCount +=1;
 				System.out.println("Student ID in initStudentObj is "+studentCount);
 				eachLine = it.next().split(",");
-				System.out.println("eachLine[0] is"+eachLine[0]);
+				//System.out.println("eachLine[0] is"+eachLine[0]);
 				if(eachLine[0] == "\n") {
 					System.out.println("Empty line encountered");
 					continue;
@@ -48,7 +67,18 @@ public class StudentFactory {
 				String phoneNumber          =eachLine[7];
 				String dateOfJoining          =eachLine[8];
 				String dateOfBirth          =eachLine[9];
-				
+				if (updateAge) {
+					System.out.println("Updating age");
+					LocalDateTime currentDOB = FileUtil.convertToLocalDateTimeViaInstant(dateFormat.parse(dateOfBirth));
+					//LocalDateTime newDOB = currentDOB.plusMonths(6);
+					dateOfBirth = dateFormat.format(Date.from(currentDOB.atZone(ZoneId.systemDefault()).toInstant()));
+					//String dob = dateFormat.format(DateofBirth.getDate());
+			        String studentData = firstName+","+lastName+","+dateOfBirth;
+			        System.out.println("Age was "+age);
+			        LocalDate currentDate = LocalDate.now().plusMonths(6);
+			        age = DayCare.getStuAge(studentData, currentDate);
+			        System.out.println("New Age is "+age);
+				}
 				studentList.add(new Student( firstName,  lastName,  age,  address,  fatherName,  motherName, phoneNumber, dateFormat.parse(dateOfJoining), studentID, dateFormat.parse(dateOfBirth)));
 				} 
 			return studentList;
@@ -97,7 +127,6 @@ public class StudentFactory {
 				String dateOfJoining          =eachLine[7];
 				Integer age            			=new Integer(eachLine[8]);
 				Student studentObj = new Student( firstName,  lastName,  age,  address,  fatherName,  motherName, phoneNumber, dateFormat.parse(dateOfJoining) , studentCount, dateFormat.parse(dateOfBirth));
-				//scanStudent.close();
 		return studentObj;
 		}
 }
