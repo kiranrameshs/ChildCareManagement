@@ -6,13 +6,19 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Date;
-
+import java.util.HashMap;
+import java.util.Hashtable;
+import edu.neu.csye6200.daycare.controller.DayCareController;
+import edu.neu.csye6200.daycare.factory.ImmunizationFactory;
 import edu.neu.csye6200.daycare.factory.StudentFactory;
+import edu.neu.csye6200.daycare.factory.TeacherFactory;
 import edu.neu.csye6200.daycare.util.FileUtil;
 
 import org.omg.CORBA.DynAnyPackage.InvalidValue;
@@ -22,6 +28,28 @@ public class DayCare {
 	private List<Teacher> teacherList = new ArrayList<Teacher>();
 	private List<EnrollmentRules> enrollmentruleList = null;
 	private static DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy"); 
+	private ImmunizationFactory immunizationFactoryInstance;
+
+	public DayCare() {
+		super();
+		this.immunizationFactoryInstance = ImmunizationFactory.getInstance();
+	}
+
+	public ImmunizationFactory getImmunizationFactoryInstance() {
+		return immunizationFactoryInstance;
+	}
+
+	public void setImmunizationFactoryInstance(ImmunizationFactory immunizationFactoryInstance) {
+		this.immunizationFactoryInstance = immunizationFactoryInstance;
+	}
+	private HashMap<Integer, Student> studentMap= new HashMap<Integer, Student>();
+	
+	
+	public HashMap getstudentMap() {
+		return this.studentMap;
+	}
+	
+	
 	
 	public List<EnrollmentRules> getEnrollmentruleList() {
 		return this.enrollmentruleList;
@@ -100,6 +128,7 @@ public class DayCare {
 			this.setClassIDGroupID(student, rule);
 			System.out.println("Student Enrollemnt Complete");
 			student.showStudentDetails();
+			studentMap.put(student.getStudentID(), student);
 			System.out.println("Student Enrollemnt Complete\n");
 		}
 		
@@ -143,7 +172,8 @@ public class DayCare {
 		return ageInMonths;
 	}
 	
-	public void enrollStudent(StudentFactory stuFactObj, String studentData) throws Exception {
+	public boolean enrollStudent(StudentFactory stuFactObj, String studentData) throws Exception {
+		boolean addStudentStatus = true;
 		System.out.println("Received student data for processing");
 		System.out.println("studentData "+studentData);
 		LocalDate currentDate = LocalDate.now();
@@ -164,9 +194,89 @@ public class DayCare {
 						dateFormat.format(student.getDateOfJoining())+","+dateFormat.format(student.getDateOfBirth());
 			System.out.println("data to be written is "+data);
 			FileUtil.appendTextFile("student.csv", data);
+			studentMap.put(student.getStudentID(), student);
+			return (addStudentStatus);
+	}
+	
+	public boolean enrollTeacher(TeacherFactory teaFactObj, String teacherData) throws Exception {
+		boolean addTeacherStatus = true;
+		System.out.println("Received teacher data for processing");
+		System.out.println("teacherData "+teacherData);
+		Teacher teacher = teaFactObj.getSingleTeacherObj(teacherData);
+			System.out.println("Teacher Enrollemnt Complete");
+			teacher.show();
+			//9,TeanineName, TeasecondName,true, #1 Hunt, 100, 8888888888
+			String data = teacher.getTeacherID()+","+teacher.getFirstName()+","+teacher.getLastName()+","+teacher.getisAvailable()+","+teacher.getAddress()+","+teacher.getPhoneNumber();
+			System.out.println("data to be written is "+data);
+			FileUtil.appendTextFile("teacher.csv", data);
+			return (addTeacherStatus);
+	}
+	public Student findStudentById(int studentId) {
+		System.out.println("ID to be searched: " + studentId);
+		Student studentObj= null;
+		boolean studentFound = false;
+		for (Classroom classroom : this.getClassroomList()) {
+			System.out.print("\nClassID:"+classroom.getClassroomID()+"\tAge group:"+classroom.getEnrollmentRule().getMinAge()+"-"+classroom.getEnrollmentRule().getMaxAge()+"months");
+			for (Group group : classroom.getGroupList()) {
+				System.out.print("\n\tGroupID:"+group.getGroupID()+"   Teacher Assigned:"+group.getTeacher().getFirstName()+"\n");
+				for (Student student : group.getStudentList()) {
+					if(studentId == student.getStudentID())
+					{
+						System.out.println(student.getStudentID());
+						studentObj = student;
+						studentFound = true;
+						break;
+					}
+				}
+				if (studentFound == true)
+					break;
+			}
+			if (studentFound == true)
+				break;
+		}
+		return studentObj;
+	}
+	//2,2,1,3,1,0
+	//Hib,DTAP,Polio,HepB,MMR,Varicella
+	private List<Immunization> getImmunizationObject(String csvData, ImmunizationFactory immunizationFactoryInstance) throws ParseException
+	{
+		List<Immunization> immunizationRec = new ArrayList<Immunization>();
+		String[] str = csvData.split(",");
 		
+		immunizationRec.add(immunizationFactoryInstance.getObject(str[1]+","+"Hib"));
+		immunizationRec.add(immunizationFactoryInstance.getObject(str[2]+","+"DTap"));
+		immunizationRec.add(immunizationFactoryInstance.getObject(str[3]+","+"Polio"));
+		immunizationRec.add(immunizationFactoryInstance.getObject(str[4]+","+"Hepatitis B"));
+		immunizationRec.add(immunizationFactoryInstance.getObject(str[5]+","+"MMR"));
+		immunizationRec.add(immunizationFactoryInstance.getObject(str[6]+","+"Varicella"));
+		
+		return immunizationRec;
 	}
 
+	public void mapStudentIDToImmunizationData(List<String> csvImmunizationData, List<Student> studentList, ImmunizationFactory immunizationFactoryInstance) throws ParseException
+	{
+		for(String csvData:csvImmunizationData)
+		{
+			String[] studentID = csvData.split(",");
+			List<Immunization> list = getImmunizationObject(csvData, immunizationFactoryInstance); 
+
+			for (Student student : studentList) {
+				if(student.getStudentID() == Integer.parseInt(studentID[0])) {
+					student.setImmunizationRecord(list);
+				}
+			}
+		}
+//		System.out.println("MAPPING DONE\n");
+	}
+
+	public void mapStudentIDToImmunizationDataFromUI(String immunizationRecord) throws ParseException
+	{
+		Student studentObj = null;
+		List<Immunization> immunizationRec = getImmunizationObject(immunizationRecord, this.immunizationFactoryInstance);
+		studentObj = findStudentById(StudentFactory.getStudentCount());
+		studentObj.setImmunizationRecord(immunizationRec);
+		FileUtil.appendTextFile("Student_Immunization_Record.csv", immunizationRecord);
+	}
 
 	public Classroom setClassIDGroupID(Student student, EnrollmentRules rule) throws Exception {
 		boolean classroomFound = false;

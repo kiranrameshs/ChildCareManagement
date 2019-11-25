@@ -3,6 +3,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -75,38 +77,38 @@ public class FileUtil {
       .atZone(ZoneId.systemDefault())
       .toLocalDateTime();
 }
-	
-//	int[] monthArr = {53,39,36,35,44,42,16,28,27,23,18,22,17,63,16,15,12,63,11};
-//	LocalDateTime currentDate = LocalDateTime.now();
-//	List<LocalDateTime> newDOB = new ArrayList<LocalDateTime>();
-//	List<Date> newDOBDate = new ArrayList<Date>();
-//	for (int i = 0; i < monthArr.length; i++) {
-//		newDOB.add(currentDate.minusMonths(monthArr[i]));
-//		newDOBDate.add(Date.from((currentDate.minusMonths(monthArr[i])).atZone(ZoneId.systemDefault()).toInstant()));
-//	}
-//	for (Date date : newDOBDate) {
-//		System.out.println("newDOBDate is "+dateFormat.format(date)+",");
-//	}
-	
-	
-//	for (Classroom classroom : dc.getDayCareObj().getClassroomList()) {
-//		System.out.print("\nClassID:"+classroom.getClassroomID()+"\tAge group:"+classroom.getEnrollmentRule().getMinAge()+"-"+classroom.getEnrollmentRule().getMaxAge()+"months");
-//		for (Group group : classroom.getGroupList()) {
-//			System.out.print("\n\tGroupID:"+group.getGroupID()+"   Teacher Assigned:"+group.getTeacher().getFirstName()+"\n");
-//			for (Student student : group.getStudentList()) {
-//				System.out.println("StudentID:"+student.getStudentID()+"\t Age:"+student.getAge()+"months   DOB is "+student.getDateOfBirth());
-//				LocalDateTime currentLocalDate = convertToLocalDateTimeViaInstant(student.getDateOfBirth());
-//				currentLocalDate = currentLocalDate.plusMonths(6);
-//				//student.setDateOfBirth(convertToDateViaSqlDate(currentLocalDate));
-//				student.setDateOfBirth(Date.from(currentLocalDate.atZone(ZoneId.systemDefault()).toInstant()));			
-//				System.out.println("Updated Student Age is "+student.getDateOfBirth());
-//			}
-//		}
-//	}
+
 
 public static Date convertToDateViaSqlDate(LocalDate dateToConvert) {
     return java.sql.Date.valueOf(dateToConvert);
 }
 
+//int[] monthArr = {53,39,36,35,44,42,16,28,27,23,18,22,17,63,16,15,12,63,11};
+//LocalDateTime currentDate = LocalDateTime.now();
+//List<LocalDateTime> newDOB = new ArrayList<LocalDateTime>();
+//List<Date> newDOBDate = new ArrayList<Date>();
+//for (int i = 0; i < monthArr.length; i++) {
+//	newDOB.add(currentDate.minusMonths(monthArr[i]));
+//	newDOBDate.add(Date.from((currentDate.minusMonths(monthArr[i])).atZone(ZoneId.systemDefault()).toInstant()));
+//}
+//for (Date date : newDOBDate) {
+//	System.out.println("newDOBDate is "+dateFormat.format(date)+",");
+//}
+
+
+//for (Classroom classroom : dc.getDayCareObj().getClassroomList()) {
+//	System.out.print("\nClassID:"+classroom.getClassroomID()+"\tAge group:"+classroom.getEnrollmentRule().getMinAge()+"-"+classroom.getEnrollmentRule().getMaxAge()+"months");
+//	for (Group group : classroom.getGroupList()) {
+//		System.out.print("\n\tGroupID:"+group.getGroupID()+"   Teacher Assigned:"+group.getTeacher().getFirstName()+"\n");
+//		for (Student student : group.getStudentList()) {
+//			System.out.println("StudentID:"+student.getStudentID()+"\t Age:"+student.getAge()+"months   DOB is "+student.getDateOfBirth());
+//			LocalDateTime currentLocalDate = convertToLocalDateTimeViaInstant(student.getDateOfBirth());
+//			currentLocalDate = currentLocalDate.plusMonths(6);
+//			//student.setDateOfBirth(convertToDateViaSqlDate(currentLocalDate));
+//			student.setDateOfBirth(Date.from(currentLocalDate.atZone(ZoneId.systemDefault()).toInstant()));			
+//			System.out.println("Updated Student Age is "+student.getDateOfBirth());
+//		}
+//	}
+//}
 	
 }

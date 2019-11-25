@@ -1,6 +1,7 @@
 package edu.neu.csye6200.daycare.objects;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,7 +9,7 @@ public class Student extends Person {
 	private int studentID;
 	private String fatherName;
 	private String motherName;
-	private List<Vaccine> immunizationRecord;
+	private List<Immunization> immunizationRecord;
 	private Date dateOfJoining;
 	private int groupID;
 	private int classID;
@@ -93,10 +94,10 @@ public class Student extends Person {
 	public void setMotherName(String motherName) {
 		this.motherName = motherName;
 	}
-	public List<Vaccine> getImmunizationRecord() {
+	public List<Immunization> getImmunizationRecord() {
 		return immunizationRecord;
 	}
-	public void setImmunizationRecord(List<Vaccine> immunizationRecord) {
+	public void setImmunizationRecord(List<Immunization> immunizationRecord) {
 		this.immunizationRecord = immunizationRecord;
 	}
 	public Date getDateOfJoining() {

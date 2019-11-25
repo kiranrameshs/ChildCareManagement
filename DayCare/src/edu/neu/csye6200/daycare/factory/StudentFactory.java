@@ -121,8 +121,8 @@ public class StudentFactory {
 				String lastName          	=eachLine[1];
 				String dateOfBirth         =eachLine[2];
 				String address          	=eachLine[3];
-				String fatherName          	=eachLine[4];
-				String motherName          	=eachLine[5];
+				String fatherName          	=eachLine[5];
+				String motherName          	=eachLine[4];
 				String phoneNumber          =eachLine[6];
 				String dateOfJoining          =eachLine[7];
 				Integer age            			=new Integer(eachLine[8]);

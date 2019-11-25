@@ -9,6 +9,7 @@ import edu.neu.csye6200.daycare.objects.Teacher;
 
 public class TeacherFactory {
 	private static TeacherFactory instance = null;
+	private static int teacherCount = 0;
 	
 	private TeacherFactory() {
 		
@@ -24,12 +25,13 @@ public class TeacherFactory {
 		}
 	}
 	
-	
+	//INIT
 	public List<Teacher>  getTeacherObj(List<String> teacherData) {
 		List<Teacher> teacherList = new ArrayList<Teacher>();
 		Iterator<String> it = teacherData.iterator();
 		String[] eachLine = null;
 			while(it.hasNext()) {
+				teacherCount += 1;
 				eachLine = it.next().split(",");
 				int teacherID            	=new Integer(eachLine[0]);
 				String firstName         	=eachLine[1];
@@ -41,5 +43,20 @@ public class TeacherFactory {
 					} 
 			return teacherList;
 	}
+	
+	
+	//SINGLE
+		public Teacher getSingleTeacherObj(String teacherData) {
+			teacherCount += 1;
+					String[] eachLine = teacherData.split(",");
+					String firstName         	=eachLine[0];
+					String lastName          	=eachLine[1];
+					boolean isAvailable        	=new Boolean(eachLine[3]);
+					String address          	=eachLine[2];
+					String phoneNumber          =eachLine[4];
+					//Dan  Peters  10  false  Yes  9876543210
+					System.out.println(firstName+"  "+lastName+"  "+teacherCount+"  "+isAvailable+"  "+address+"  "+phoneNumber);
+					return (new Teacher( firstName, lastName, teacherCount,  isAvailable,  address, phoneNumber));
+		}
 		
 	}
